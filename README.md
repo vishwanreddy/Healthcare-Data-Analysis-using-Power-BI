@@ -187,9 +187,6 @@ Formatting:
 - If connecting to on-premises DBs, configure an On-premises data gateway in Power BI Service for scheduled refreshes.
 - Enable incremental refresh for large fact tables (requires Power BI Pro / Premium and date fields).
 
-Schedule:
-- For frequently updated data, set up a scheduled refresh in Power BI Service (daily/hourly depending on license and gateway).
-
 ---
 
 ## Deployment & sharing
@@ -229,3 +226,118 @@ Possible improvements:
 Author / maintainer: vishwanreddy (vishwanreddypathuti@gmail.com)
 
     <img width="1091" height="683" alt="Power Bi Dashboard" src="https://github.com/user-attachments/assets/685e533a-3d7e-46eb-93b0-b38b5ff2337e" />
+
+
+##Overview
+--------
+This Excel dashboard provides a high-level health care report for 2016–2021. It visualizes hospital operational and financial KPIs (patient days, patient stays, revenue, discharges, hospital counts) with interactive slicers (Year) to filter the entire dashboard. The dashboard is designed for analysts and stakeholders to quickly review trends by year, hospital type, and state.
+
+##Top-level KPIs & Visuals
+------------------------
+- Title: Health Care Report 2016-2021
+- Year slicer: BEG_DATE (Year) — allows selecting a single year or multiple years (image shows 2020 selected)
+- Charts / Panels:
+  - Patient Days (bar): total patient days for the selected year(s)
+  - Patient Stays (pie): patient stays count (or measure) for the selected year(s)
+  - Type of Hospital Revenue (area/line): revenue by hospital type (e.g., Comparable, Hospital-LTC Emphasis, Kaiser Foundation, Psychiatric, Shriners)
+  - State-wise No. of Hospitals / Revenue (line/marker): state-level hospital counts and revenue comparison
+  - Total Hospitals (pie): distribution of hospital types and counts (values like 720 shown)
+  - Net Patient Revenue (pie): total net revenue (number displayed)
+  - Revenue Trend (column): revenue trend for the selected year(s)
+  - Total Discharge (column): discharges total
+  - MTD (column): month-to-date revenue (e.g., Jan)
+  - YTD (pie): year-to-date revenue
+  - QTD (bar): quarter-to-date revenue
+- Notes on labels: some chart labels may display in scientific notation (e.g., 1.56353E+11) when values are very large — see troubleshooting below.
+
+##Data Source & Structure
+-----------------------
+This dashboard expects a flat table (or tables in the Data Model / Power Query output) containing transaction or aggregated hospital-level records. Recommended fields:
+
+- BEG_DATE (Date or Year): Year or full date used for year slicer (e.g., 2016, 2017, …)
+- Year (Number or Text): 2016, 2017, ...
+- State (Text): e.g., Alameda, Fresno, Corona, Victorville
+- Hospital_Name (Text): name of hospital or identifier
+- Hospital_Type (Text): e.g., Comparable, Hospital-LTC Emphasis, Kaiser Foundation Health, Psychiatric Health Facilities, Shriners Hospitals
+- Patient_Days (Numeric)
+- Patient_Stays (Numeric)
+- Discharges (Numeric)
+- Net_Patient_Revenue (Numeric) — currency
+- Revenue (Numeric) — currency
+- Month (Text/Number) and Quarter (Text/Number), if MTD/QTD are computed
+- Any grouping or flag fields used in pivot tables (region, comparable flag, etc.)
+
+If you use the Data Model, include relationships or lookup tables (State meta, Hospital types) as necessary.
+
+##Excel Features / Requirements
+-----------------------------
+- Excel 2016 or later (Office 365 recommended) for best compatibility
+- PivotTables and PivotCharts (charts are driven by pivot caches)
+- Slicers for interactivity (BEG_DATE Year slicer)
+- Power Query (Get & Transform) — if you import/transform raw data
+- Optional: Data Model (if using relationships) and DAX measures for advanced KPIs
+
+##How the Dashboard is Built
+--------------------------
+- Raw data is loaded into a data sheet or into Power Query and then loaded into the workbook/data model.
+- PivotTables are built from the table/data model and each pivot is connected to a PivotChart.
+- A Year slicer (BEG_DATE) is connected to the pivot caches to filter all charts.
+- Chart formatting uses dark gray background with blue series and white titles as shown.
+
+##How to Refresh & Update
+-----------------------
+1. Replace or update the raw data source sheet (the table used by Power Query or Pivot).
+2. If using Power Query:
+   - Data → Get Data → Refresh All (or use the Query pane to refresh individual queries).
+3. If using simple table + pivots:
+   - Ensure table range includes new rows (convert raw data to an Excel Table: Insert → Table).
+   - Right click any PivotTable → Refresh.
+4. To refresh all: Data → Refresh All (or press Ctrl+Alt+F5).
+5. After refresh, verify slicer state (e.g., make sure the desired Year is selected).
+
+##Adding new years or hospitals
+----------------------------
+- Add rows to the data table with the new year(s), hospital entries, and values.
+- Refresh queries / pivots.
+- If using a separate Year lookup table, update it to include the new year(s).
+
+##Common Issues & Troubleshooting
+-------------------------------
+- Scientific notation (e.g., 1.56353E+11) shown on chart labels:
+  - Increase label number format precision or change number format to comma-separated currency (Format Data Labels → Number → Custom: #,##0).
+- Slicer not filtering all charts:
+  - Ensure all pivot tables are using the same pivot cache or connect slicer to each pivot (Slicer → Report Connections).
+- Pivot chart mismatch or stale values:
+  - Right-click pivot → Refresh. If the range has changed, confirm the pivot source range or re-bind to the named table.
+- Slow performance with large datasets:
+  - Use Power Query to pre-aggregate or load to the Data Model and use DAX measures instead of many individual pivot tables.
+- Missing fields after data update:
+  - Confirm new data contains the required columns with consistent header names (case/spacing matters).
+
+##Formatting & Export Options
+---------------------------
+- Export to PDF: File → Export → Create PDF/XPS (choose portrait/landscape and scaling).
+- Print: use Dashboard layout → Fit sheet on one page / adjust scaling.
+- Copy chart images: Right-click chart → Copy → Paste into presentations/reports.
+
+##Recommended Improvements 
+-----------------------------------
+- Add clear metric cards at top for single-number KPIs (Total Revenue, Total Patients, Net Revenue).
+- Add tooltip or info icon that explains units (currency, patient counts).
+- Use Power Pivot measures (DAX) for consistent measure definitions (e.g., MTD, QTD, YTD).
+- Add date slicer supporting range selection (Start/End) if multi-year trend comparisons are needed.
+- Include small data dictionary sheet describing each column and units.
+
+##Security & Data Governance
+--------------------------
+- Keep sensitive data encrypted or in a secured network location.
+- Avoid embedding unmasked PHI in distributed copies unless required and compliant with local regulations.
+- Maintain a changelog when data transformations or KPI definitions change.
+
+##Contact & Credits
+-----------------
+- Author / Maintainer: (vishwanreddypathuri@gmail.com)
+- Dashboard created for: Health Care Analysis team
+- For changes to the workbook structure, contact the workbook owner.
+
+  <img width="1819" height="645" alt="Excel DashBoard" src="https://github.com/user-attachments/assets/555cb584-f067-4e29-825c-8a5cc7cc8aec" />
