@@ -227,3 +227,5 @@ Possible improvements:
 
 ## Contact
 Author / maintainer: vishwanreddy (vishwanreddypathuti@gmail.com)
+
+    <img width="1091" height="683" alt="Power Bi Dashboard" src="https://github.com/user-attachments/assets/685e533a-3d7e-46eb-93b0-b38b5ff2337e" />
